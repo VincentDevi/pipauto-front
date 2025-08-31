@@ -18,7 +18,7 @@ export default function Home() {
         >
           solidjs.com
         </a>{" "}
-        to learn how to build Solid apps.
+        to learn how to build Solid .
       </p>
       <p class="my-4">
         <span>Home</span>

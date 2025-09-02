@@ -4,6 +4,12 @@ import { Suspense } from "solid-js";
 import Nav from "~/components/Nav";
 import "./app.css";
 import { ClerkProvider } from "clerk-solidjs";
+import { SurrealProvider, useSurreal } from "./libs/providers/SurrealProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
+import { AuthProvider } from "./libs/providers/AuthProvider";
+import { SurrealClientProvider } from "./libs/providers/SurrealClientProvider";
+
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
@@ -12,8 +18,23 @@ export default function App() {
         <ClerkProvider
           publishableKey={import.meta.env.VITE_PUBLIC_CLERK_PUBLISHABLE_KEY}
         >
-          <Nav />
-          <Suspense>{props.children}</Suspense>
+          <QueryClientProvider client={queryClient}>
+            <SurrealProvider
+              endpoint={import.meta.env.VITE_SURREALDB_ADDRESS}
+              autoConnect
+              params={{
+                namespace: import.meta.env.VITE_SURREALDB_NAMESPACE,
+                database: import.meta.env.VITE_SURREALDB_DATABASE,
+              }}
+            >
+              <AuthProvider>
+                <SurrealClientProvider>
+                  <Nav />
+                  <Suspense>{props.children}</Suspense>
+                </SurrealClientProvider>
+              </AuthProvider>
+            </SurrealProvider>
+          </QueryClientProvider>
         </ClerkProvider>
       )}
     >

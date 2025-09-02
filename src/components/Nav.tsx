@@ -16,7 +16,6 @@ export default function Nav() {
     path == location.pathname
       ? "border-sky-600"
       : "border-transparent hover:border-sky-600";
-  const { userId, sessionId } = useAuth();
 
   return (
     <nav class="bg-sky-800">
@@ -39,8 +38,6 @@ export default function Nav() {
           <li>
             <SignedIn>
               <UserButton />
-              <p>Welcome, {userId()}</p>
-              <p>session id, {sessionId()}</p>
               <SignOutButton class="bg-slate-200 rounded-md px-3 py-1" />
             </SignedIn>
           </li>

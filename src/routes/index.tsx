@@ -1,5 +1,6 @@
 import { A } from "@solidjs/router";
 import Counter from "~/components/Counter";
+import SurTest from "~/components/Sur";
 import { Button } from "~/components/ui/button";
 
 export default function Home() {
@@ -28,6 +29,7 @@ export default function Home() {
         </A>{" "}
       </p>
       <Button variant={"destructive"}> Un bouton </Button>
+      <SurTest />
     </main>
   );
 }

@@ -1,10 +1,9 @@
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
-import Nav from "~/components/Nav";
 import "./app.css";
 import { ClerkProvider } from "clerk-solidjs";
-import { SurrealProvider, useSurreal } from "./libs/providers/SurrealProvider";
+import { SurrealProvider } from "./libs/providers/SurrealProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 import { AuthProvider } from "./libs/providers/AuthProvider";
 import { SurrealClientProvider } from "./libs/providers/SurrealClientProvider";
@@ -29,7 +28,6 @@ export default function App() {
             >
               <AuthProvider>
                 <SurrealClientProvider>
-                  <Nav />
                   <Suspense>{props.children}</Suspense>
                 </SurrealClientProvider>
               </AuthProvider>

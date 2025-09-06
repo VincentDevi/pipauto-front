@@ -1,37 +1,35 @@
-import { createResource, For, Show } from "solid-js";
+import { useQuery } from "@tanstack/solid-query";
+import { Match, Switch } from "solid-js";
+import { columns } from "~/components/clients/table/columns";
+import DataTable from "~/components/clients/table/data-table";
+import Nav from "~/components/Nav";
+import DefaultLayout from "~/components/ui/layout";
 import { useSurreal } from "~/libs/providers/SurrealProvider";
-
-type Client = {
-  first_name: string;
-};
 
 export default function Clients() {
   const { client } = useSurreal();
+  const query = useQuery(() => ({
+    queryKey: ["clients"],
+    queryFn: async () => {
+      const result = await client().query("select * from client;");
+      return result[0] ?? [];
+    },
+  }));
 
-  const [clients] = createResource(async () => {
-    const result = await client().query<Client[]>("SELECT * FROM client;");
-    return result[0] ?? [];
-  });
-
-  console.log("okokok");
   return (
-    <div>
+    <DefaultLayout nav={<Nav />}>
       <h1>Liste des clients</h1>
-      <Show when={!clients.loading} fallback={<p>Chargement...</p>}>
-        <Show when={!clients.error} fallback={<p>{clients.error.message}</p>}>
-          <Show
-            when={clients() && clients()!.length > 0}
-            fallback={<p>Aucun client trouvé</p>}
-          >
-            <ul>
-              a
-              <For each={clients()}>
-                {(client) => <li>{client.first_name}</li>}
-              </For>
-            </ul>
-          </Show>
-        </Show>
-      </Show>
-    </div>
+      <Switch>
+        <Match when={query.isPending}>
+          <p> loading... </p>
+        </Match>
+        <Match when={query.isError}>
+          <p> Something went wrong</p>
+        </Match>
+        <Match when={query.isSuccess}>
+          <DataTable columns={columns} data={query.data} />
+        </Match>
+      </Switch>
+    </DefaultLayout>
   );
 }
